@@ -125,20 +125,20 @@ async function fetchAndParseCourses() {
 // 上午 5 节、下午 4 节、晚上 3 节，共 12 节
 const SCHOOL_TIME_TABLE = [
   // 上午
-  { number: 1, startTime: '08:20', endTime: '09:00' },
-  { number: 2, startTime: '09:05', endTime: '09:45' },
-  { number: 3, startTime: '10:05', endTime: '10:45' },
-  { number: 4, startTime: '10:50', endTime: '11:30' },
-  { number: 5, startTime: '11:35', endTime: '12:15' },
+  { section: 1, startTime: '08:20', endTime: '09:00' },
+  { section: 2, startTime: '09:05', endTime: '09:45' },
+  { section: 3, startTime: '10:05', endTime: '10:45' },
+  { section: 4, startTime: '10:50', endTime: '11:30' },
+  { section: 5, startTime: '11:35', endTime: '12:15' },
   // 下午
-  { number: 6, startTime: '14:30', endTime: '15:10' },
-  { number: 7, startTime: '15:15', endTime: '15:55' },
-  { number: 8, startTime: '16:15', endTime: '16:55' },
-  { number: 9, startTime: '17:00', endTime: '17:40' },
+  { section: 6, startTime: '14:30', endTime: '15:10' },
+  { section: 7, startTime: '15:15', endTime: '15:55' },
+  { section: 8, startTime: '16:15', endTime: '16:55' },
+  { section: 9, startTime: '17:00', endTime: '17:40' },
   // 晚上
-  { number: 10, startTime: '19:00', endTime: '19:40' },
-  { number: 11, startTime: '19:45', endTime: '20:25' },
-  { number: 12, startTime: '20:30', endTime: '21:10' },
+  { section: 10, startTime: '19:00', endTime: '19:40' },
+  { section: 11, startTime: '19:45', endTime: '20:25' },
+  { section: 12, startTime: '20:30', endTime: '21:10' },
 ];
 
 /**
@@ -151,7 +151,12 @@ async function importTimeSlots() {
     const forenoon = 5;
     const afternoon = 4;
     const night = 3;
-
+    
+    const presetTimeSlots = SCHOOL_TIME_TABLE.map(t => ({
+        number: t.section,
+        startTime: t.startTime,
+        endTime: t.endTime
+    }));
 
     // 方案 A：传完整配置对象（推荐，能正确按 forenoon=5 划分上午）
     try {
