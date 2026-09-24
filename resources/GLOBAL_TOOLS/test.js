@@ -152,6 +152,14 @@ async function importTimeSlots() {
     const afternoon = 4;
     const night = 3;
 
+
+    // 兼容旧版桥接：{number, startTime, endTime} 纯数组格式
+    const presetTimeSlots = SCHOOL_TIME_TABLE.map(t => ({
+        number: t.section,
+        startTime: t.startTime,
+        endTime: t.endTime
+    }));
+
     // 方案 A：传完整配置对象（推荐，能正确按 forenoon=5 划分上午）
     try {
         if (typeof window.shiguangBridge !== 'undefined'
