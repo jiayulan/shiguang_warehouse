@@ -141,17 +141,11 @@ const SCHOOL_TIME_TABLE = [
   { section: 12, startTime: '20:30', endTime: '21:10' },
 ];
 
-/**
- * 生成并导入时间段配置
- * 格式对齐拾光课程表规范：totalWeek / startSemester / startWithSunday / showWeekend
- *                       / forenoon / afternoon / night / sections
- */
 async function importTimeSlots() {
     // 明确划分：上午 5 节、下午 4 节、晚上 3 节
     const forenoon = 5;
     const afternoon = 4;
     const night = 3;
-    
     const presetTimeSlots = SCHOOL_TIME_TABLE.map(t => ({
         number: t.section,
         startTime: t.startTime,
