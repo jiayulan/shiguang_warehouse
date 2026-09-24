@@ -121,63 +121,42 @@ async function fetchAndParseCourses() {
     return finalCourses;
 }
 
-// ========== 时间段配置==========
-// 上午 5 节、下午 4 节、晚上 3 节，共 12 节
-const SCHOOL_TIME_TABLE = [
-  // 上午
-  { section: 1, startTime: '08:20', endTime: '09:00' },
-  { section: 2, startTime: '09:05', endTime: '09:45' },
-  { section: 3, startTime: '10:05', endTime: '10:45' },
-  { section: 4, startTime: '10:50', endTime: '11:30' },
-  { section: 5, startTime: '11:35', endTime: '12:15' },
-  // 下午
-  { section: 6, startTime: '14:30', endTime: '15:10' },
-  { section: 7, startTime: '15:15', endTime: '15:55' },
-  { section: 8, startTime: '16:15', endTime: '16:55' },
-  { section: 9, startTime: '17:00', endTime: '17:40' },
-  // 晚上
-  { section: 10, startTime: '19:00', endTime: '19:40' },
-  { section: 11, startTime: '19:45', endTime: '20:25' },
-  { section: 12, startTime: '20:30', endTime: '21:10' },
-];
+// 导入预设时间段
+async function importPresetTimeSlots() {
+    console.log("正在准备预设时间段数据...");
+    const presetTimeSlots = [
+        { "number": 1, "startTime": "08:20", "endTime": "09:00" },
+        { "number": 2, "startTime": "09:05", "endTime": "09:45" },
+        { "number": 3, "startTime": "10:05", "endTime": "10:45" },
+        { "number": 4, "startTime": "09:15", "endTime": "09:55" },
+        { "number": 5, "startTime": "11:35", "endTime": "12:15" },
+        { "number": 6, "startTime": "14:30", "endTime": "15:10" },
+        { "number": 7, "startTime": "15:15", "endTime": "15:55" },
+        { "number": 8, "startTime": "16:15", "endTime": "16:55" },
+        { "number": 9, "startTime": "17:00", "endTime": "17:40" },
+        { "number": 10, "startTime": "19:00", "endTime": "19:40" },
+        { "number": 11, "startTime": "19:45", "endTime": "20:25" },
+        { "number": 12, "startTime": "20:30", "endTime": "21:10" },
+    ];
 
-/**
- * 生成并导入时间段配置
- * 格式对齐拾光课程表规范：totalWeek / startSemester / startWithSunday / showWeekend
- *                       / forenoon / afternoon / night / sections
- */
-async function importTimeSlots() {
-    // 明确划分：上午 5 节、下午 4 节、晚上 3 节
-    const forenoon = 5;
-    const afternoon = 4;
-    const night = 3;
-
-
-    // 方案 A：传完整配置对象（推荐，能正确按 forenoon=5 划分上午）
     try {
-        if (typeof window.shiguangBridge !== 'undefined'
-            && typeof window.shiguangBridge.savePresetTimeSlots === 'function') {
-            window.shiguangBridge.savePresetTimeSlots(timeConfig);
-            console.log('时间配置导入成功（对象模式）:', timeConfig);
-            return true;
-        }
-    } catch (e) {
-        console.warn('对象模式失败，尝试数组模式:', e);
-    }
-
-    // 方案 B：传纯数组（兼容旧版，节数划分依赖 App 默认，可能需要手动把上午设为 5）
-    try {
-        if (typeof window.shiguangBridgePromise !== 'undefined') {
-            await window.shiguangBridgePromise.savePresetTimeSlots(JSON.stringify(presetTimeSlots));
-            window.shiguangBridge.showToast('时间点已保存，请确认上午节数为5');
-            return true;
+        console.log("正在尝试导入预设时间段...");
+        const result = await window.shiguangBridgePromise.savePresetTimeSlots(JSON.stringify(presetTimeSlots));
+        if (result === true) {
+            console.log("预设时间段导入成功！");
+            window.shiguangBridge.showToast("测试时间段导入成功！");
+        } else {
+            console.log("预设时间段导入未成功，结果：" + result);
+            window.shiguangBridge.showToast("测试时间段导入失败，请查看日志。");
         }
     } catch (error) {
-        console.error('导入时间段失败:', error);
-        window.shiguangBridge.showToast('时间段配置导入失败，课程将继续导入');
-        return false;
+        console.error("导入时间段时发生错误:", error);
+        window.shiguangBridge.showToast("导入时间段失败: " + error.message);
     }
 }
+
+
+
 
 async function runImportFlow() {
     try {
